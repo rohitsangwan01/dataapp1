@@ -1,0 +1,199 @@
+<html>
+  <head>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <title>Store</title>
+
+    <style type="text/css">
+      #table{
+        margin-top: 50px;
+      }
+
+      #store{
+        margin-top: 50px;
+        background-color: grey;
+        color: white;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <center><h3 id="store">Store</h3></center>
+    <form action="{% url 'add_store' %}" method="post">
+      {% csrf_token %}
+    <table align="center" width="500" id="table">
+      <tr>
+        <td>Name : </td>
+        <td>
+          <div class="input-group mb-3">
+              <input type="text" name="name" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Address : </td>
+        <td>
+          <select class="form-select" name="address" aria-label="Default select example">
+            <option selected> ------ </option>
+            {% for each_address in address %}
+              <option value="{{ each_address.id }}">{{ each_address }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Microenterpreneur : </td>
+        <td>
+          <select class="form-select" name="microenterpreneur" aria-label="Default select example">
+            <option selected> ------ </option>
+            {% for each_microenterpreneur in microenterpreneur %}
+              <option value="{{ each_microenterpreneur.id }}">{{ each_microenterpreneur }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Store Code : </td>
+        <td>
+          <div class="input-group mb-3">
+              <input type="text" name="store_code" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th></th>
+        <th colspan="2">
+          <button type="submit" class="btn btn-secondary">Add Store</button>
+        </th>
+      </tr>
+    </table>
+    </form>
+
+    <table align="center" class="table table-striped">
+      <tr>
+        <th>
+          <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th scope="col">Name</th>
+          <th scope="col">AddressLine1</th>
+          <th scope="col">AddressLine2</th>
+          <th scope="col">City</th>
+          <th scope="col">State</th>
+          <th scope="col">Pincode</th>
+          <th scope="col">geolocation</th>
+          <th scope="col">Update</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each_address in address %}
+          <tr>
+            <th scope="row">{{ each_address.id }}</th>
+            <td>{{ each_address.name }}</td>
+            <td>{{ each_address.address_line1 }}</td>
+            <td>{{ each_address.address_line2 }}</td>
+            <td>{{ each_address.city }}</td>
+            <td>{{ each_address.state }}</td>
+            <td>{{ each_address.pincode }}</td>
+            <td>{{ each_address.geolocation }}</td>
+            <th><a href="{% url 'update_address' %}?address_id={{ each_address.id }}">Yes</a></th>
+            <th><a href="{% url 'delete_address' %}?address_id={{ each_address.id }}">Yes</a></th>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+        </th>
+        <th>
+          {% if update_address %}
+          <form action="{% url 'save_address_update' %}" method="post">
+            {% csrf_token %}
+          <table align="center">
+            <tr>
+              <!-- <td>Name : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                    <input type="hidden" name="id" value="{{ update_address.id }}">
+                    <input type="text" name="name" value={{ update_address.name }} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>AddressLine1 : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                  <input type="text" name="address_line1" value={{ update_address.address_line1 }} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                    <!-- <textarea name="address_line1" value={{ update_address.address_line1 }} class="form-control" aria-label="Username" aria-describedby="basic-addon1"></textarea> -->
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>AddressLine2 : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                  <input type="text" name="address_line2" value={{ update_address.address_line2 }} class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                    <!-- <textarea name="address_line2" value={{ update_address.address_line2 }} class="form-control" aria-label="Username" aria-describedby="basic-addon1"></textarea> -->
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>City : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                    <select class="form-select" name="city" aria-label="Default select example">
+                      <option selected> {{ update_address.city }} </option>
+                      {% for each_city in city %}
+                        <option>{{ each_city }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>State : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                    <select class="form-select" name="state" aria-label="Default select example">
+                      <option selected> {{ update_address.state }} </option>
+                      {% for each_state in state %}
+                        <option>{{ each_state }}</option>
+                      {% endfor %}
+                    </select> 
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>Pincode : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                    <input type="number" value={{ update_address.pincode }} name="pincode" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <td>Geolocation : </td> -->
+              <td>
+                <div class="input-group mb-3">
+                    <input type="text" value={{ update_address.geolocation }} name="geolocation" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <!-- <th></th> -->
+              <th>
+                <button type="submit" class="btn btn-secondary">Update Address</button>
+              </th>
+            </tr>
+          </table>
+          </form>
+          {% endif %}
+        </th>
+      </tr>
+    </table>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+  </body>
+</html>
